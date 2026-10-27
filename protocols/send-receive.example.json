@@ -1,0 +1,1 @@
+{"from":"nav-room","id":"nav-room:120:1","payload":{"options":{"correct-port":0.23,"correct-starboard":0.11,"escalate":0.04,"hold":0.62},"picked":"hold","table":"cross-track-correction"},"tick":120,"to":"autopilot","v":1,"what":"roll"}
