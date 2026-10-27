@@ -1,0 +1,40 @@
+# Sources read 27 Oct 2026 (AKDT) / 27-28 Oct UTC
+
+## PLATO primary/authoritative (index + verified live opens marked)
+- Sherwood & Stifle, CERL X-44, The PLATO IV Communications System, June 1975 — VERIFIED LIVE via browser_open https://archive.org/download/micro_IA41153028_0257/micro_IA41153028_0257.pdf — 950 terminals installed, 480 simultaneously active (July 1975); ECS 100x transfer / 1000x access vs disk/drum; every keypress through central CPU, no local echo; avg response 125 ms, half hardware half software polling/buffering, actual processing few ms, echo fraction ms; requirement <0.25 s; no store-and-forward; 32 terminals per Site Controller, NIU for 32 site controllers, 1008 terminals on TV channel, 1260 bit/s per terminal guaranteed.
+- Woolley 1994, PLATO: The Emergence of On-Line Community — VERIFIED LIVE (Talkomatic chapter) https://liz.nl/plato04.htm — Talkomatic character-at-a-time, up to 5 active per channel + unlimited monitors, >40 hrs/day use; term-talk paging/monitor mode.
+- TUTOR memory (index, Wikipedia/Staroceans summarising Sherwood 1974 The TUTOR Language) http://staroceans.org/wiki/A/TUTOR and https://en.wikipedia.org/wiki/TUTOR_(programming_language) — 150 student vars n1-n150/v1-v150 persistent per user; common up to 1500 words nc/vc, unnamed temporary vs named (disk-backed); storage up to 1000 extra words swap-only; 60-bit words PLATO IV.
+- CYBIS manual (index) — common copied into ECS, checkpointed to disk, comload into CM; router vars 50; student/router preserved in student record.
+- PLATO III science education text (index, archive.org) https://archive.org/stream/micro_IA41153144_0492/micro_IA41153144_0492_djvu.txt — 20 student banks of 300 words in 16K core (CDC 1604, 32K), 139 TUTOR vars + pointers; keypush interrupts CPU, adds key+terminal ID to a list, services referencing student bank; avg reply 0.1-0.2 s; no disk accesses during lesson (core-oriented).
+- PLATO IV design in same text — ECS planned 2M 60-bit words = 4000 student banks + 250 hrs lessons; banks+lessons in ECS, portions transferred to CM when needed.
+- Illinois Grainger (index) https://grainger.illinois.edu/news/magazine/plato — 1972 mainframe change, up to 1000 users at once.
+- ClassicCmp first-hand (index, Paul Koning/Chuck Guzis thread) https://classiccmp.org/mailman3/hyperkitty/list/test-drb@ccmp.vtda.org/message/THQXWWNK7XCFQLDT2XGEM2BHMLIUQ7R7/ — PLATO made extensive use of ECS swapping per-terminal state/programs; PPUs did disk/terminal I/O to/from ECS not CM; dual 6500 supported 600 concurrent logged-in of 1008 connected c.1977. Anecdotal/first-hand, flag as such.
+- Plasma terminal (index + Illinois ECE) https://ece.illinois.edu/news/2541 and Stifle PLATO IV Student Terminal via archive.org — plasma panel is display AND storage, pixel stays lit, no refresh, eliminates refresh memory; 512x512, 1200 bit/s input.
+- CDC 6600 PPU (index) https://en.wikipedia.org/wiki/CDC_6600 — 10 PPs, own 4096x12-bit memory each, shared execution 'barrel and slot' round-robin 1 microsec rotation, OS mostly on PPs leaving CP for users; ECS uses.
+- Dear Friendly Orange Glow — only via reviews/secondary (index): tens of ms design aim quoted in review https://sohkamyung.github.io/reviews/nonfiction/2024/20241218-FriendlyOrangeGlow.html ; did NOT read book itself. Flag.
+- Games (index, Wikipedia PLATO) https://en.wikipedia.org/wiki/PLATO_(computer_system) — Talkomatic 6 rooms x5 (early version), Empire 30-player, Spasim 32, Avatar 60-player c.1978. Empire timer refresh anecdote classiccmp (index) — players manual update + timer ~5s refresh, low confidence anecdote.
+
+## CUDA / GPU (index unless noted)
+- NVIDIA CUDA Programming Guide, cooperative groups / clusters / DSMEM https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/intro-to-cuda-cpp.html.md and writing kernels page — grid sync requires cooperative launch, all blocks co-resident; clusters CC9.0+, max 8 portable, DSMEM atomics.
+- Divergence/SoA: NVIDIA guide via search snippets + Stanford CS193G etc. Warp = 32 threads same instruction; divergent paths serialised; SoA gives unit-stride coalescing.
+- Persistent kernels: KineticSim arXiv (index) https://arxiv.org/html/2606.21784 — launch 5-10 us, global latency hundreds cycles vs shared few, single kernel for S steps, shared-mem caching. NOTE arXiv IDs in 2606 range look future-dated in index; treat cautiously, use only for pattern description not authority.
+- CUDA Proxy Player (index) https://zhhr0321.github.io/assets/img/project/CUDAproxy_rpt.pdf — persistent worker scheduling latency 4.3 us > eager launch 2.8 us; sync barriers 1.25 ms/forward in that MoE case; host overhead 76% in launch-bound regime N<=512.
+- Blink arXiv (index) — persistent scheduler 1 block 256 threads, ring buffer CAS claim, scan 4096 slots 1-5 us.
+- CUDA graphs / device graph launch: NVIDIA CUDA Features Archive https://docs.nvidia.com/cuda/archive/13.1.0/cuda-features-archive/index.html — CUDA 12.0 device-side graph launch; graphs must be pre-built, cannot adapt to runtime dynamics (OpenReview CCKS paper index).
+- Watchdog/preemption: NVIDIA forum (index) https://forums.developer.nvidia.com/t/timeout-under-linux-is-it-possible-to-remove-it/240153 — GUI watchdog ~2s kills long kernels on display GPUs; Pascal+ preemption.
+- Warp specialisation: producer/consumer warps at warp granularity, no intra-warp penalty; TMA on Hopper; CUTLASS persistent schedules (index, aicassindra summaries + arXiv).
+
+## FLAME GPU (VERIFIED LIVE)
+- Sheffield RSE benchmark https://rse.shef.ac.uk/blog/2023-08-18-benchmarking-flamegpu2-on-h100-a100-and-v100-gpus/ — VERIFIED LIVE. Circles: 10,648 to 1,000,000 agents, 200 steps, single GPU. 1M agents spatial3D total 0.944s V100 / 0.685 A100 / 0.551 H100 for 200 steps (~2.8-4.7 ms/step); brute-force 1457s V100 same scale; each agent reads avg 204.5 msgs spatial vs 1M brute. RTC improves.
+- FLAME GPU 2 docs https://docs.flamegpu.com/api/page_md_README.html — VERIFIED LIVE: agent types, communication, birth/death, data stays on GPU for real-time viz.
+- FLAME GPU 1 techniques (index, Richmond slides/papers): each agent function = a kernel, each agent = a thread; agents sorted into state lists to avoid diversity/branching; SoA storage; message lists read-only within iteration = natural barrier, no read/write same list in one function; Sugarscape 1M cells step ~5ms, 16M ~76ms on K40 (2014-era).
+
+## Builder repos (VERIFIED LIVE via browser_open/github, 27 Oct 2026)
+- https://github.com/SuperInstance/plato-ghostable — About: 'Persistence classes — Eternal, Persistent, Ephemeral'; README body only: 'Ghostable lifecycle management for tiles and agents. pip install plato-ghostable' (verified live in research window too).
+- https://github.com/SuperInstance/plato-portal — README: Python SDK persistent multi-agent; PLATO = shared tile-server memory, room = named collection on server, tile = one JSON record in it; repo does NOT contain PLATO server, scripts are clients for external one (default http://localhost:8847); agents have markdown memory SOUL/USER/MEMORY.md; in-memory Fleet create/tag/broadcast/dispatch; LRU cache TTL.
+- https://github.com/SuperInstance/terrain — MUD-to-visual: rooms.mud format Room/Description/Exits/Objects/Theme/Floor (+Occupants); terrain_core holds 'true state', renderers are 'shadows that never feed back'; 5-room trawler, vendored spatial-registry 33 rooms / 4 worlds / 66 portals, portals become exits; scene.json ~1.2KB/room contract.
+- https://github.com/SuperInstance/vessel-room-navigator — 9 rooms (7 physical,1 virtual,1 composite), 14 walkable + 36 warp edges, rooms-config.json; Unified Room Theory PROBE→DISCOVER→TEST→PICK→REMEMBER→WALK; PLATO room server = 'Distributed tile system' knowledge base; reef topology connects physical/MUD/PLATO rooms.
+
+## Not found
+- No published work explicitly connecting PLATO/TUTOR design to GPU/CUDA design found in searches. Absence reported as search result, not proof of non-existence.
+- No GPU MMO server production system with published client counts found; GPU game-world work is ABM/physics subproblems, not full MMO servers.
