@@ -1,0 +1,25 @@
+kind,path,method,avg_ms,p50_ms,p95_ms,p99_ms,max_ms,jitter_ms,mbps,loss_pct,note
+latency,thor->orin,icmp 150pkts 200ms spacing,9.39,4.45,41.10,80.00,85.2,12.83,,0,
+latency,orin->thor,icmp 150pkts 200ms spacing,11.07,4.27,51.80,92.00,106.0,9.58,,0,
+latency,proart->thor,icmp 150pkts 200ms spacing (WSL egress),10.45,5.39,42.90,84.20,101.0,13.60,,0,
+latency,proart->orin,icmp 150pkts 200ms spacing (WSL egress),5.67,4.98,6.69,18.30,92.9,1.07,,0,
+latency,thor->gateway,icmp 2x100pkts summary rounds,9.34,,,,93.4,,,,0,avg of two rounds 8.77/9.92
+latency,orin->gateway,icmp 2x100pkts summary rounds,2.00,,,,3.4,,,,0,avg of two rounds 1.99/2.01
+latency,proart->gateway,icmp 150pkts 200ms spacing,3.21,3.10,4.64,5.05,16.7,0.59,,0,
+latency,thor->wan-1.1.1.1,icmp 150pkts 200ms spacing,37.97,33.20,65.90,112.00,115.0,14.82,,0,
+latency,orin->wan-1.1.1.1,icmp 150pkts 200ms spacing,31.47,30.80,36.60,38.20,39.3,2.62,,0,
+latency,proart->wan-1.1.1.1,icmp 150pkts 200ms spacing,33.04,32.30,37.70,42.00,52.0,2.58,,0,
+hub,orin->proart,tcp connect to 192.168.0.78:2206 x30,,4.05,10.14,,10.86,,,,one wifi hop + tunnel setup
+hub,thor->proart,cold ssh echo via hub x8,,54,,87,87,,,,handshake included; persistent channel would sit near icmp p95
+hub,orin->proart,cold ssh echo via hub x8,,75,,87,87,,,,handshake included
+throughput,thor->orin,iperf3 1 stream 10s,,,,,,,61.5,,
+throughput,thor->orin,iperf3 4 streams 10s,,,,,,,83.7,,
+throughput,orin->thor,iperf3 reverse 10s,,,,,,,94.4,,
+throughput,proart->thor,raw tcp python sink 256MB (no iperf3 in WSL),,,,,,,92,,
+throughput,proart->orin,raw tcp python sink 256MB,,,,,,,192,,
+throughput,thor->proart,dd 128MB via ssh hub,,,,,,,55.3,,only inbound path to WSL
+throughput,orin->proart,dd 128MB via ssh hub,,,,,,,33.5,,two wifi hops + ssh crypto
+radio,thor,iw link,,,,,,,,,signal -62 dBm; negotiated rx 172 / tx 206.5 Mb/s HE-MCS 7/8
+radio,orin,iw link,,,,,,,,,signal -49 dBm; negotiated rx 585 / tx 351 Mb/s VHT 80MHz
+radio,proart,not measurable from WSL,,,,,,,,,Windows host owns the radio; throughput is the evidence
+sampler,all three boxes,1-minute 3-ping averages for 24h from 2026-10-28T02:04Z,,,,,,,,,writing ~/whq-stage0/weather-24h.csv per box; first minutes overlap this lane's own bulk tests and read high
